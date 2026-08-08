@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyeux Anniversaire Baby🎂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #DC143C 0%, #00205B 50%, #FFD700 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .quiz-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 28px;
+        }
+
+        .question-number {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 16px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+            color: #333;
+            font-size: 14px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: #f0f0f0;
+            border-color: #DC143C;
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            background: #DC143C;
+            color: white;
+            border-color: #DC143C;
+        }
+
+        .option.correct {
+            background: #2ecc71;
+            color: white;
+            border-color: #2ecc71;
+        }
+
+        .option.incorrect {
+            background: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-submit {
+            background: #DC143C;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #b01030;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 20, 60, 0.3);
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-reset:hover {
+            background: #e8e8e8;
+        }
+
+        .result-container {
+            display: none;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #FFD700 0%, #DC143C 50%, #00205B 100%);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-card h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .result-message {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .retry-questions {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            color: #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .retry-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .retry-list li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f9f9f9;
+            border-left: 4px solid #DC143C;
+            font-size: 14px;
+        }
+
+        .retry-list li:before {
+            content: "↻ ";
+            color: #DC143C;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .complete-message {
+            color: white;
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #DC143C 0%, #00205B 100%);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .complete-message p {
+            margin-bottom: 15px;
+        }
+
+        .complete-message p:first-child {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .quiz-card {
+                padding: 20px;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .result-card {
+                padding: 20px;
+            }
+
+            .complete-message {
+                padding: 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎂 Joyeux Anniversaire</h1>
+            <p>Pour: <strong>Valisoa</strong> 💙</p>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-card">
+                <div id="questionsDiv"></div>
+                <div class="btn-container">
+                    <button class="btn-submit" onclick="submitQuiz()">Vérifier mes réponses</button>
+                    <button class="btn-reset" onclick="resetQuiz()">Recommencer</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-card">
+                <h2>💝 Résultats</h2>
+                <div class="score" id="scoreDisplay"></div>
+                <div class="result-message">
+                    <div id="finalMessage"></div>
+                </div>
+            </div>
+            <div class="retry-questions" id="retrySection" style="display: none;">
+                <p style="margin-bottom: 12px; font-weight: 600; font-size: 16px;">À refaire:</p>
+                <ul class="retry-list" id="retryList"></ul>
+                <button class="btn-submit" onclick="retryFailed()" style="width: 100%; margin-top: 16px;">Refaire les questions</button>
+            </div>
+            <div class="complete-message" id="completeMessage" style="display: none;">
+                <p>✨ Parfait ! ✨</p>
+                <p>Je serai toujours là pour toi, Valisoa.</p>
+                <p>À chaque moment, bon ou difficile.</p>
+                <p>Je t'aime et je veux passer le restant de mes jours avec toi dans la joie et le bonheur.</p>
+                <button class="btn-submit" onclick="showReward()" style="width: 100%; margin-top: 20px;">🎁 Ouvre ta récompense</button>
+            </div>
+            <div id="rewardContainer" style="display: none;">
+                <div style="background: white; border-radius: 12px; padding: 30px; color: #333; line-height: 1.8; text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
+                    <p style="font-size: 18px; font-weight: 600; margin-bottom: 20px;">💌 Un message pour toi 💌</p>
+                    <p style="text-align: left; margin-bottom: 15px;">Valisoa,</p>
+                    <p style="text-align: left; margin-bottom: 15px;">Je me souviens du jour où tu t'es assis à côté de moi dans le bus. Tu étais timide, mais il y avait quelque chose chez toi qui m'a intriguée. On a commencé à jouer au loup-garou ensemble, et c'est devenu notre moment préféré. À ce moment-là, je ne savais pas que ça changerait ma vie.</p>
+                    <p style="text-align: left; margin-bottom: 15px;">Quand tu m'as demandé d'être ta copine sur Instagram, j'ai paniqué. J'ai trouvé des excuses, je ne savais pas comment gérer ce que je ressentais. Mais quand je t'ai demandé si tu m'aimais bien et que tu as juste hoché la tête sans rien dire, j'ai eu peur. Je voulais que tu sois <strong>sûr</strong> de tes sentiments, que tu me dises "oui, c'est toi que je veux" avec certitude. Je voulais que tu sois accro à moi, que tu ne doutes pas une seule seconde.</p>
+                    <p style="text-align: left; margin-bottom: 15px;">Et finalement, tu as su me le montrer. À travers tes gestes, ton attention, ta patience. Ces 4 mois et 14 jours m'ont prouvé que tu étais sûr de moi, et moi je suis <strong>sûre</strong> à 100% que je veux passer le restant de mes jours avec toi.</p>
+                    <p style="text-align: left; margin-bottom: 15px;">Tu me traites bien, tu m'écoutes, tu me fais rire avec tes "miaouh" ridicules et ton visage charmeur. Pour la première fois de ma vie, je n'ai aucun doute : <strong>c'est toi, Valisoa.</strong></p>
+                    <p style="text-align: left; margin-bottom: 15px;">Je serai toujours là pour toi. Dans les bons moments comme dans les difficiles. Je veux qu'on devienne riche ensemble, qu'on montre à nos parents ce qu'on a construit, et surtout, qu'on vieillis ensemble dans la joie et le bonheur.</p>
+                    <p style="text-align: left; margin-bottom: 15px; font-weight: 600;"><strong>Je t'aime, Valisoa. Plus que tu ne le sauras jamais.</strong></p>
+                    <p style="font-size: 20px; margin-top: 20px;">❤️ I LOVE YOU ❤️</p>
+                </div>
+                <button class="btn-reset" onclick="backToResults()" style="width: 100%;">Retour aux résultats</button>
+            </div>
+            <button class="btn-reset" onclick="backToQuiz()" style="width: 100%; margin-top: 20px; display: none;" id="resetBtn">Recommencer le quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                text: "Quel jeu on jouait souvent ensemble dans le bus ?",
+                options: ["Loup-garou", "Uno", "Questions vérité", "Jeu de mots"],
+                correct: 0
+            },
+            {
+                id: 2,
+                text: "Sur quel réseau social m'as-tu demandé d'être ta copine ?",
+                options: ["Instagram", "Snapchat", "TikTok", "WhatsApp"],
+                correct: 0
+            },
+            {
+                id: 3,
+                text: "Combien de temps avait notre 'contrat' au début ?",
+                options: ["1 mois", "3 mois", "6 mois", "1 an"],
+                correct: 1
+            },
+            {
+                id: 4,
+                text: "Qu'est-ce que j'aime le plus chez toi ?",
+                options: ["Tes yeux", "Ton sourire", "Ta gentillesse", "Ton humour"],
+                correct: 0
+            },
+            {
+                id: 5,
+                text: "Où avons-nous eu un premier moment spécial ?",
+                options: ["À l'université", "Dans le bus scolaire", "Au resto", "Chez lui"],
+                correct: 1
+            },
+            {
+                id: 6,
+                text: "Quel est ton plat préféré ?",
+                options: ["Le riz", "Les pâtes", "La pizza", "Le poulet"],
+                correct: 1
+            },
+            {
+                id: 7,
+                text: "Quelle couleur te va le mieux ?",
+                options: ["Bleu marine", "Jaune fluo", "Rouge", "Noir"],
+                correct: 2
+            },
+            {
+                id: 8,
+                text: "Depuis combien de temps sommes-nous ensemble ?",
+                options: ["3 mois", "4 mois", "4 mois et 14 jours", "5 mois"],
+                correct: 2
+            },
+            {
+                id: 9,
+                text: "Un moment où tu m'a vraiment fait rire...",
+                options: ["Quand tu as dansé", "Quand tu as dis 'miaouh' avec une voix grave et un visage charmeur", "Quand tu as imité un accent", "Quand tu as raconté une blague"],
+                correct: 1
+            },
+            {
+                id: 10,
+                text: "Ce que je veux vraiment faire avec toi...",
+                options: ["Voyager autour du monde", "Avoir des enfants", "Passer le restant de mes jours avec toi dans la joie et le bonheur", "Devenir célèbre"],
+                correct: 2
+            }
+        ];
+
+        let answers = new Array(questions.length).fill(-1);
+        let attempted = new Set();
+
+        function renderQuiz(onlyFailed = false) {
+            const container = document.getElementById('questionsDiv');
+            container.innerHTML = '';
+
+            const indicesToShow = onlyFailed ? Array.from(attempted) : Array.from({length: questions.length}, (_, i) => i);
+
+            indicesToShow.forEach((idx) => {
+                const q = questions[idx];
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${q.id} sur ${questions.length}</div>
+                    <div class="question-text">${q.text}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIdx) => `
+                            <button class="option" id="q${idx}_o${optIdx}" onclick="selectOption(${idx}, ${optIdx})">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function selectOption(qIdx, oIdx) {
+            answers[qIdx] = oIdx;
+            for (let i = 0; i < questions[qIdx].options.length; i++) {
+                const btn = document.getElementById(`q${qIdx}_o${i}`);
+                btn.classList.remove('selected');
+                if (i === oIdx) btn.classList.add('selected');
+            }
+        }
+
+        function submitQuiz() {
+            if (answers.some(a => a === -1)) {
+                alert('Réponds à toutes les questions d\'abord !');
+                return;
+            }
+
+            attempted.clear();
+            let correct = 0;
+
+            questions.forEach((q, idx) => {
+                if (answers[idx] === q.correct) {
+                    correct++;
+                } else {
+                    attempted.add(idx);
+                }
+            });
+
+            showResults(correct);
+        }
+
+        function showResults(score) {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'block';
+
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('scoreDisplay').textContent = `${score}/${questions.length} - ${percentage}%`;
+
+            if (attempted.size === 0) {
+                document.getElementById('finalMessage').innerHTML = `
+                    <p style="font-size: 18px; margin-bottom: 15px;">🎉 Parfait ! Tu as tout juste !</p>
+                    <p>Tu me connais si bien, mon amour.</p>
+                `;
+                document.getElementById('completeMessage').style.display = 'block';
+                document.getElementById('retrySection').style.display = 'none';
+            } else {
+                const failedQuestions = Array.from(attempted).map(idx => `Question ${questions[idx].id}: ${questions[idx].text}`);
+                document.getElementById('retryList').innerHTML = failedQuestions.map(q => `<li>${q}</li>`).join('');
+                document.getElementById('retrySection').style.display = 'block';
+                document.getElementById('completeMessage').style.display = 'none';
+                document.getElementById('finalMessage').innerHTML = `<p>Tu as ${attempted.size} question(s) à refaire. C'est normal, ça montre qu'on a encore plein de choses à découvrir ensemble. 💙</p>`;
+            }
+        }
+
+        function retryFailed() {
+            // Réinitialiser seulement les réponses aux questions échouées
+            Array.from(attempted).forEach(idx => {
+                answers[idx] = -1;
+            });
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            renderQuiz(true);
+        }
+
+        function backToQuiz() {
+            answers = new Array(questions.length).fill(-1);
+            attempted.clear();
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            renderQuiz(false);
+        }
+
+        function resetQuiz() {
+            answers = new Array(questions.length).fill(-1);
+            attempted.clear();
+            renderQuiz(false);
+        }
+
+        function showReward() {
+            document.getElementById('completeMessage').style.display = 'none';
+            document.getElementById('rewardContainer').style.display = 'block';
+            document.getElementById('resetBtn').style.display = 'none';
+        }
+
+        function backToResults() {
+            document.getElementById('rewardContainer').style.display = 'none';
+            document.getElementById('completeMessage').style.display = 'block';
+            document.getElementById('resetBtn').style.display = 'block';
+        }
+
+        // Initialiser le quiz au chargement
+        renderQuiz(false);
+    </script>
+</body>
+</html>
